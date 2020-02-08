@@ -1,0 +1,27 @@
+{
+    "name": "itscript/nested_tree",
+    "description": "Nested Tree with Doctrine example",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksey Buldakov",
+            "email": "aleksey.krazer@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+            "doctrine/orm": "*",
+        "doctrine/migrations": "^2.0",
+        "gedmo/doctrine-extensions": "^2.4",
+        "twig/twig": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "core\\": "core/",
+            "models\\": "models/",
+            "models\\ORM\\": "models/ORM"
+        },
+        "files": ["vendor/gedmo/doctrine-extensions/lib/Gedmo/Mapping/Annotation/All.php"]
+    }
+}

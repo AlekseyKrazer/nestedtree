@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Nested Tree</title>
+</head>
+<body>
+
+
+<ul class="list-group">
+    {% for node in data %}
+    <li id="node_{{ node.id|e }}" class="list-group-item">
+        {% if node.childsCount > 0 %}
+        <a href="#" id="{{ node.id|e }}" onclick="expandNode({{ node.id|e }});">{{ node.title|e }}</a href="#">
+        {% else %}
+        {{ node.title|e }}
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+<script>
+
+    function expandNode(id, show = true) { // функция для выгрузки данных
+        let linkNode = document.getElementById(id);
+        if (show == true) {
+            //выгружаем данные через AJAX
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "?r=tree/api");
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.responseType = 'json';
+            xhr.send("id=" + id);
+
+            xhr.onload = function () {
+                let responseObj = xhr.response;
+                showNode(id, responseObj);
+            };
+            linkNode.setAttribute('onclick', "expandNode(" + id + ", false);"); // ставим аттрибут false, это показывает нам что узел загружен и отображен
+        } else {
+            //закрываем список дочерних узлов
+            let parentNode = document.getElementById("parentId_" +id);
+            parentNode.remove();
+            linkNode.setAttribute('onclick', "expandNode(" + id + ");"); // возвращаем возможность вызова дочерних узлов
+        }
+    }
+
+    function showNode(id, data) { // отображение узлов на странице
+        let mainElement = document.getElementById("node_" + id); //выбираем родительский тэг <li>
+
+        let childElement = document.createElement("ul"); //создаем ul для дочерного узла
+        childElement.setAttribute("class", "nested");
+        childElement.setAttribute("id", "parentId_" + id);
+
+        for(let k in data) {
+            var element = document.createElement("li"); // создаем li на каждого ребенка
+            element.setAttribute("class","list-group-item");
+            if (data[k]['childsCount']>0) //если у ребенка есть дети, то делаем запись кликабельной
+            {
+                element.setAttribute("id", "node_" + data[k]['id']);
+                var link = document.createElement("a");
+                link.setAttribute("href", "#");
+                link.setAttribute("id", data[k]['id']);
+                link.setAttribute('onclick', "expandNode(" + data[k]['id'] + ");");
+                link.innerText = data[k]['title'];
+                element.appendChild(link);
+            } else {
+                element.innerText = data[k]['title'];
+            }
+            childElement.appendChild(element); // сформированный li добавляется в основной список потомков ul
+        }
+        mainElement.after(childElement); // <ul> потомков добавляется после <li> родителя.
+    }
+</script>
+</body>
+</html>
