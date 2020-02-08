@@ -28,9 +28,11 @@ class ControllerTree extends Controller
 
     public function actionApi()
     {
-        $id = intval($_POST['id']);
-        $tree = new GetTree();
-        $data = $tree->getData($id);
-        echo $data;
+        if (isset($_POST['id'])) {
+            $id   = intval($_POST['id']);
+            $tree = new GetTree();
+            $data = $tree->getData($id);
+            echo $data;
+        }
     }
 }
