@@ -11,11 +11,11 @@ use models\ORM\NestedTree;
 class GetTree extends Model
 {
     /**
-     * SOURCE ext|dql - источник данных.
+     * source ext|dql - источник данных.
      * ext - из внешнего расширения
      * dql - запрос на DQL
      */
-    const SOURCE = "dql";
+    public $source;
 
     /**
      * @param int|null $nodeId
@@ -24,7 +24,7 @@ class GetTree extends Model
      */
     public function getData(int $nodeId = null) : string
     {
-        switch (self::SOURCE) {
+        switch ($this->source) {
             case "ext":
                 $data = $this->getDataFromExtension($nodeId);
                 break;

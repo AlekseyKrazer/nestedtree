@@ -19,6 +19,7 @@ class ControllerTree extends Controller
     public function actionIndex()
     {
         $tree = new GetTree();
+        $tree->source ="dql";
         $data = $tree->getData(null);
         $twig = $this->view->generateTwig();
 
@@ -31,6 +32,7 @@ class ControllerTree extends Controller
         if (isset($_POST['id'])) {
             $id   = intval($_POST['id']);
             $tree = new GetTree();
+            $tree->source ="dql";
             $data = $tree->getData($id);
             echo $data;
         }
